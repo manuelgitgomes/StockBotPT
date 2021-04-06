@@ -19,17 +19,17 @@ message["To"] = receiver_email
 
 # Create the plain-text and HTML version of your message
 text = """\
-Hi,
-How are you?
-Real Python has many great tutorials:
-www.realpython.com"""
+Olá!
+Somos a Check Stock PT e estamos a testar o envio de emails para detetar stocks.
+Em breve irás receber atualizações de stock das tuas GPUs favoritas!
+Até à próxima!"""
 html = """\
 <html>
   <body>
-    <p>Hi,<br>
-       How are you?<br>
-       <a href="http://www.realpython.com">Real Python</a> 
-       has many great tutorials.
+    <p>Olá!<br>
+       Somos a Check Stock PT e estamos a testar o envio de emails para detetar stocks.<br>
+       Em breve irás receber atualizações de stock das tuas GPUs favoritas!<br>
+       Até à próxima!
     </p>
   </body>
 </html>
