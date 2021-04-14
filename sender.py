@@ -26,7 +26,7 @@ def definer(path):
 
 
 
-def sender(port, smtp_email, sender_email, path, password):
+def sender(port, smtp_email, sender_email, path, password, gpu, site):
   # Read the csv file and sends the email for each receiver
   with open(path) as file:
     reader = csv.reader(file)
@@ -44,14 +44,15 @@ def sender(port, smtp_email, sender_email, path, password):
         text = """\
         Olá, """ + name + """!
         Somos a Check Stock PT e estamos a testar o envio de emails para detetar stocks.
-        Em breve irás receber atualizações de stock das tuas GPUs favoritas!
+        A GPU """ + gpu + """ está sem stock aqui.
         Até à próxima!"""
         html = """\
         <html>
         <body>
           <p>Olá, """ + name + """!<br>
             Somos a Check Stock PT e estamos a testar o envio de emails para detetar stocks.<br>
-            Em breve irás receber atualizações de stock das tuas GPUs favoritas!<br>
+            A GPU """ + gpu + """ está sem stock 
+            <a href=""" + site + """>aqui.0</a> <br>
             Até à próxima!
           </p>
         </body>
