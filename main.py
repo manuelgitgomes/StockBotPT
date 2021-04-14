@@ -12,7 +12,7 @@ def main():
     Wpath = "websites.csv"
     # Define the password and the receiver emails
     password = definer(Rpath)
-    # Scan webpages and return gpu (not) available and correpondent website
+    # Scan webpages and return gpu available and correpondent website
     gpu, chip, site, store = scanner(Wpath)
     # Send the email
     sender(port, smtp_email, sender_email, Rpath, password, gpu, site)
