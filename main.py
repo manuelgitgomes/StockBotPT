@@ -13,7 +13,7 @@ def main():
     # Define the password and the receiver emails
     password = definer(Rpath)
     # Scan webpages and return gpu (not) available and correpondent website
-    gpu, site = scanner(Wpath)
+    gpu, chip, site, store = scanner(Wpath)
     # Send the email
     sender(port, smtp_email, sender_email, Rpath, password, gpu, site)
     

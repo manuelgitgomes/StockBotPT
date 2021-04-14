@@ -51,8 +51,8 @@ def sender(port, smtp_email, sender_email, path, password, gpu, site):
         <body>
           <p>Olá, """ + name + """!<br>
             Somos a Check Stock PT e estamos a testar o envio de emails para detetar stocks.<br>
-            A GPU """ + gpu + """ está sem stock 
-            <a href=""" + site + """>aqui.0</a> <br>
+            A GPU """ + gpu + """ está em stock 
+            <a href=""" + site + """>aqui</a>. <br>
             Até à próxima!
           </p>
         </body>
