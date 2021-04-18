@@ -15,9 +15,10 @@ def scanner(path):
 
                 # Download webpage
                 response = requests.get(website, headers=headers)
-
                 # Saves all text
-                soup = BeautifulSoup(response.text, "lxml")
+                #soup = BeautifulSoup(response.text, "lxml")
+                soup = BeautifulSoup(response.text, "html.parser") 
+                
 
                 # If there is "Sem stock" in soup, it sleeps, if not, it breaks the loop and returns the GPU name and website
                 if str(soup).find("Sem stock") > 0:
@@ -25,9 +26,16 @@ def scanner(path):
                     print('A GPU ' + name + ' está sem stock!')
                     continue
                 else:
-                    print('A GPU ' + name + ' está em stock!')
+                    # If there is stock, check price and save it
+                    if store == " PCDiga":
+                        pricehtml = soup.find_all('span', class_ = "price-wrapper")
+                        pricelist = [item.text for item in pricehtml]
+                        pricestr = ""
+                        for ele in pricelist: 
+                            pricestr += ele
+                    print('A GPU ' + name + ' está em stock e custa ' + pricestr + '!')
                     website = '"' + website + '"'
-                    return name, chipset, website, store
+                    return name, chipset, website, store, pricestr
                     break
                     
 
