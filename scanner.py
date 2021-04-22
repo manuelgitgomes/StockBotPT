@@ -36,7 +36,7 @@ def scanner(path, c):
                     soup = BeautifulSoup(response.text, "html.parser") 
 
                     # If there is "Sem stock" in soup, it sleeps, if not, it breaks the loop and returns the GPU name and website
-                    if str(soup).find("Sem stock") < 0:
+                    if str(soup).find("Sem stock") > 0:
                         time.sleep(0.01)
                         print('The GPU ' + name + ' is out of stock on' + store)
                         continue
