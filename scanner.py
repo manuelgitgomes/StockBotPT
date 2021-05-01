@@ -88,8 +88,36 @@ def scanner(path, c):
                         return name, chipset, website, store, pricestr, priceint, c
                         break
 
-                # If the store is GlobalData
+                # If the store is CHIP7
                 elif store == " CHIP7":
+                    # Set the headers for a browser experience
+                    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+                    # Download webpage
+                    response = requests.get(website, headers=headers)
+                    # Saves all text
+                    soup = BeautifulSoup(response.text, "html.parser") 
+
+                    # If there is "Esgotado" in soup, it sleeps, if not, it breaks the loop and returns the GPU name and website
+                    if str(soup).find("Esgotado") > 0:
+                        time.sleep(0.01)
+                        print('The GPU ' + name + ' is out of stock on' + store)
+                        continue
+                    else:
+                        # If there is stock, check price and save it
+                        pricehtml = soup.find_all('span', class_ = "price")
+                        pricelist = [item.text for item in pricehtml]
+                        pricestr = ""
+                        for ele in pricelist[2]: 
+                            pricestr += ele
+                        print('The GPU ' + name + ' is in stock on' + store + ', costing ' + pricestr + '!')
+                        website = '"' + website + '"'
+
+                        # Transforms the string into an integer
+                        priceint = int(price[:(len(price)-5)])
+                        return name, chipset, website, store, pricestr, priceint, c
+                        break
+                # If the store is MBIT
+                elif store == " MBIT":
                     # Set the headers for a browser experience
                     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
                     # Download webpage
