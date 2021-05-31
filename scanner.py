@@ -5,6 +5,7 @@ import time
 import csv
 import cloudscraper
 import pandas as pd
+import os
 
 def scanner(path, c):
     while(1):
@@ -34,58 +35,68 @@ def scanner(path, c):
                     response = requests.get(website, headers=headers)
                     # Saves all text
                     soup = BeautifulSoup(response.text, "html.parser") 
-
                     # If there is "Sem stock" in soup, it sleeps, if not, it breaks the loop and returns the GPU name and website
-                    if str(soup).find("Sem stock") > 0:
-                        time.sleep(0.01)
-                        print('The GPU ' + name + ' is out of stock on' + store)
-                        continue
+                    if str(soup).find("Oops") > 0:
+                            print('Error 404, page not found')
                     else:
-                        # If there is stock, check price and save it
-                        pricehtml = soup.find_all('span', class_ = "price-wrapper")
-                        pricelist = [item.text for item in pricehtml]
-                        pricestr = ""
-                        for ele in pricelist: 
-                            pricestr += ele
-                        print('The GPU ' + name + ' is in stock on' + store + ', costing ' + pricestr + '!')
-                        website = '"' + website + '"'
+                        if str(soup).find("Sem stock") > 0:
+                            time.sleep(0.01)
+                            print('The GPU ' + name + ' is out of stock on' + store)
+                            continue
+                        else:
+                            # If there is stock, check price and save it
+                            pricehtml = soup.find_all('span', class_ = "price-wrapper")
+                            pricelist = [item.text for item in pricehtml]
+                            pricestr = ""
+                            for ele in pricelist: 
+                                pricestr += ele
+                            print('The GPU ' + name + ' is in stock on' + store + ', costing ' + pricestr + '!')
+                            website = '"' + website + '"'
 
-                        # Transforms the string into an integer
-                        pricestr2 = pricestr.replace(u'\xa0', u'')
-                        priceint = int(pricestr2[:(len(pricestr2)-4)])
+                            # Transforms the string into an integer
+                            pricestr2 = pricestr.replace(u'\xa0', u'')
 
-                        return name, chipset, website, store, pricestr, priceint, c
-                        break
+                            priceint = int(pricestr2[:(len(pricestr2)-4)])
+
+                            return name, chipset, website, store, pricestr, priceint, c
+                            break
 
                 # If the store is GlobalData
                 elif store == " GlobalData":
-                    # Due to GlobalData anti-DDoS software, another way to get text was needed
-                    scraper = cloudscraper.create_scraper()  # returns a CloudScraper instance
-                    soup2 = scraper.get(website).text
+                    try:
+                        # Due to GlobalData anti-DDoS software, another way to get text was needed
+                        scraper = cloudscraper.create_scraper()  # returns a CloudScraper instance
+                        soup2 = scraper.get(website).text
 
 
-                    # If there is "Online - Esgotado" in soup2, it sleeps, if not, it breaks the loop and returns the GPU name and websit
-                    if str(soup2).find("Online - Esgotado") > 0:
-                        time.sleep(0.01)
-                        print('The GPU ' + name + ' is out of stock on' + store)
-                        continue
-                    else:
-                        # If there is stock, check price and save it
-                        priceclass = '<span class="price__amount">'
-                        priceplc = soup2.find(priceclass)
-                        l = len(priceclass)
-                        pricestr = soup2[priceplc+l:]
-                        europlc = pricestr.find('€')
-                        pricestr = pricestr[:europlc+1]
-                        pricestr = pricestr.replace(u'\n',u'')
-                        print('The GPU ' + name + ' is in stock on' + store + ', costing ' + pricestr + '!')
-                        website = '"' + website + '"'
-                        
-                        # Transforms the string into an integer
-                        pricestr2 = pricestr.replace(u'\xa0', u'')
-                        priceint = int(pricestr2[:(len(pricestr2)-4)])
+                        # If there is "Online - Esgotado" in soup2, it sleeps, if not, it breaks the loop and returns the GPU name and websit
+                        if str(soup2).find("Online - Esgotado") > 0:
+                            time.sleep(0.01)
+                            print('The GPU ' + name + ' is out of stock on' + store)
+                            continue
+                        else:
+                            # If there is stock, check price and save it
+                            priceclass = '<span class="price__amount">'
+                            priceplc = soup2.find(priceclass)
+                            l = len(priceclass)
+                            pricestr = soup2[priceplc+l:]
+                            europlc = pricestr.find('€')
+                            pricestr = pricestr[:europlc+1]
+                            pricestr = pricestr.replace(u'\n',u'')
+                            print('The GPU ' + name + ' is in stock on' + store + ', costing ' + pricestr + '!')
+                            website = '"' + website + '"'
+                            
+                            # Transforms the string into an integer
+                            pricestr2 = pricestr.replace(u'\xa0', u'')
+                            priceint = int(pricestr2[:(len(pricestr2)-4)])
 
-                        return name, chipset, website, store, pricestr, priceint, c
+                            return name, chipset, website, store, pricestr, priceint, c
+                    except KeyboardInterrupt:
+                        os._exit()
+                    except Exception as ex:
+                        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+                        message = template.format(type(ex).__name__, ex.args)   
+                        print(message)
                         break
 
                 # If the store is CHIP7
